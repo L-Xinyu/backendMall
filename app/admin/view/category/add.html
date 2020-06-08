@@ -19,7 +19,7 @@
         <div class="layui-inline">
             <label class="layui-form-label" style="width: 200px;">父级分类</label>
             <div class="layui-input-inline">
-                <select name="parent" id="classif"></select>
+                <select name="pid" id="classif"></select>
             </div>
         </div>
     </div>
@@ -47,16 +47,7 @@
         function _classif(res=[]) {
             // res 分类数据 先期模拟
             let temps = '<option value="0">-| 顶级菜单</option>';
-            var data = [
-                {id: 1, name: "办公管理", pid: 0},
-                {id: 2, name: "请假申请", pid: 1},
-                {id: 3, name: "出差申请", pid: 1},
-                {id: 4, name: "请假记录", pid: 2},
-                {id: 5, name: "系统设置", pid: 0},
-                {id: 6, name: "权限管理", pid: 5},
-                {id: 7, name: "用户角色", pid: 6},
-                {id: 8, name: "菜单设置", pid: 6},
-            ];
+            var data = {$categories|raw}
 
             let toTrees = toTree(data);
             for (let item of toTrees) {
@@ -86,14 +77,24 @@
         //监听提交
         form.on('submit(demo1)', function (data) {
             console.log(data.field, '最终的提交信息')
+            data = data.field;
             let url = '';
             // layObj.post(url,data,function (res) {
             //
             // });
-            $ajax({
-                url: '{:url("category/save")}?val=' + data.field,
-                success: (res) => {
-                   setTimeout('window.location.reload()',1000);
+            $.ajax({
+                type:"POST",
+                data:data,
+                url: '/admin/category/save',
+                success(res){
+                   if (res.status == 1){
+                       layer.msg('Success to add this category!',function () {
+                           window.location="{:url('index')}";
+                       })
+                   }else{
+                       layer.msg(res.message);
+                       return false;
+                   }
                 }
             })
 

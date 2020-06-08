@@ -30,7 +30,7 @@
 <body>
 <div class="layuimini-container">
     <div class="layuimini-main">
-        <button type="button" class="layui-btn add">添 加</button>
+        <a href="{:url('add')}"><button type="button" class="layui-btn add">添 加</button></a>
 
         <div class="layui-form" style="margin-top: 20px;">
             <table class="layui-table">
@@ -129,12 +129,6 @@
             elem: 'pages'
             , count: 100
             , theme: '#FFB800'
-        });
-
-
-        // 添加 分类
-        $('.add').on('click', function () {
-            layObj.dialog("{:url('add')}")
         });
 
         //监听状态 更改
