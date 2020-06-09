@@ -18,4 +18,19 @@ class Category extends Model
         $result = $this->where($where)->field($field)->select();
         return $result;
     }
+
+    //get list
+    public function getLists($where,$num = 10){
+        $order = [
+            'listorder' => 'desc',
+            'id' => 'desc'
+        ];
+        //get data where status!=99
+        $result = $this->where('status','<>',config('status.mysql.table_delete'))
+            ->where($where)  //pid
+            ->order($order)
+            ->paginate($num);
+        return $result;
+
+    }
 }

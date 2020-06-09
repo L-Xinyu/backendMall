@@ -11,7 +11,18 @@ use app\common\business\Category as CategoryBusiness;
 class Category extends AdminBase
 {
     public function index(){
-        return View::fetch();
+        $pid = input('param.pid',0,'intval');
+        $data = [
+            'pid' => $pid,
+        ];
+        try {
+            $categories = (new CategoryBusiness())->getList($data,5);
+        }catch (\Exception $e){
+            $categories = [];
+        }
+        return View::fetch("",[
+            'categories' => $categories,
+        ]);
     }
 
     public function add(){
