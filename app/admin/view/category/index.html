@@ -79,14 +79,19 @@
                     <td>
                         {$vo.operate_user}
                     </td>
-                    <td data-id="{$vo.id}"><input type="checkbox" {if $vo.status == 1}checked{/if}  name="status" lay-skin="switch"
-                                           lay-filter="switchStatus"
-                                           lay-text="ON|OFF">
+                    <td data-id="{$vo.id}">
+                        <input type="checkbox" {if $vo.status == 1}checked{/if} name="status" lay-skin="switch"
+                                           lay-filter="switchStatus" lay-text="ON|OFF">
                     </td>
                     <td>
-                        <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete delete" data-ptype="1"
-                           lay-event="delete" data-id="{$vo.id}">Delete</a>
-                        <a href="{:url('index',['pid'=>$vo.id])}">Get subsection</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete delete"
+                           data-ptype="1" lay-event="delete" data-id="{$vo.id}">
+                            Delete
+                        </a>
+                        <a class="layui-btn layui-btn-xs layui-btn-normal"
+                           href="{:url('index',['pid'=>$vo.id])}">
+                            Subcategory({$vo.childCount})
+                        </a>
                     </td>
                 </tr>
                 {/volist}
@@ -113,7 +118,7 @@
             , curr: {$categories.current_page}
             , jump:function (obj,first) {
                 if(!first){
-                    location.href="?page="+obj.curr
+                    location.href="?page="+obj.curr+"&pid={$pid}";
                 }
             }
 

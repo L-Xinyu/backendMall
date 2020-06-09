@@ -23,6 +23,7 @@ class Category extends AdminBase
         }
         return View::fetch("",[
             'categories' => $categories,
+            'pid' => $pid,
         ]);
     }
 
@@ -101,9 +102,4 @@ class Category extends AdminBase
         }
 
     }
-
-
-
-
-
 }

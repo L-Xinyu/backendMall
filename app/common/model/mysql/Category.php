@@ -32,9 +32,20 @@ class Category extends Model
             ->paginate($num);
         return $result;
     }
+
     //根据ID 更新数据库中的数据
     public function updayeByID($id,$data){
         $data['update_time'] = time();
         return $this->where(['id'=>$id])->save($data);
+    }
+
+    //获取每个id下子分类数量get Subcategories counts
+    public function getChildCountInPids($condition){
+        $res = $this->where('pid','in',$condition['pid'])
+            ->where('status','<>',config('status.mysql.table_delete'))
+            ->field(['pid','count(*) as count'])
+            ->group('pid')
+            ->select();
+        return $res;
     }
 }

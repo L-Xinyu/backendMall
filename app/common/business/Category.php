@@ -45,6 +45,25 @@ class Category
         }
         $result = $list->toArray();
         $result['render'] = $list->render();
+
+        //get Subcategories子分类
+        $pids = array_column($result['data'], "id");
+        if($pids) {
+            $idCountResult = $this->model->getChildCountInPids(['pid' => $pids]);
+            $idCountResult = $idCountResult->toArray();
+
+            $idCounts = [];
+            foreach($idCountResult as $countResult) {
+                $idCounts[$countResult['pid']] = $countResult['count'];
+            }
+        }
+        if($result['data']) {
+            foreach($result['data'] as $k => $value) {
+                //$a ?? 0 等同于 isset($a) ? $a : 0。
+                //在数据中添加一个字段childCount用于计算子栏目
+                $result['data'][$k]['childCount'] = $idCounts[$value['id']] ?? 0;
+            }
+        }
         return $result;
     }
 
