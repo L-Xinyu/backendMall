@@ -6,12 +6,13 @@
 
 namespace app\common\business;
 use app\common\model\mysql\Category as CategoryModel;
+use think\Exception;
 
 class Category
 {
-    public $categoryObj = null;
+    public $model = null;
     public function __construct(){
-        $this->categoryObj = new CategoryModel();
+        $this->model = new CategoryModel();
     }
 
     public function add($data){
@@ -19,18 +20,17 @@ class Category
         $name = $data['name'];
         //新增前去db根据$name查询记录是否存在
         try {
-            $this->categoryObj->save($data);
+            $this->model->save($data);
         }catch (\Exception $e){
-            throw new \think\Exception('Server Error!');
+            throw new Exception('Server Error!');
         }
-
         //返回新增id
-        return $this->categoryObj->getLastInsID();
+        return $this->model->id;
     }
 
     public function getNormalCategories(){
         $field = 'id, name, pid';
-        $categories = $this->categoryObj->getNormalCategories($field);
+        $categories = $this->model->getNormalCategories($field);
         if (!$categories){
             return $categories;
         }
@@ -39,11 +39,74 @@ class Category
     }
     //Paginated list
     public function getList($data,$num){
-        $list = $this->categoryObj->getLists($data,$num);
+        $list = $this->model->getLists($data,$num);
         if (!$list){
             return [];
         }
-        $list = $list->toArray();
-        return $list;
+        $result = $list->toArray();
+        $result['render'] = $list->render();
+        return $result;
+    }
+
+    public function getById($id) {
+        $result = $this->model->find($id);
+        if(empty($result)) {
+            return [];
+        }
+        $result = $result->toArray();
+        return $result;
+    }
+
+    /**
+     * sort category business
+     * @param $id
+     * @param $listorder
+     * @return bool
+     * @throws \think\Exception
+     */
+    public function listorder($id, $listorder) {
+        // Check if the id data exists
+        $res = $this->getById($id);
+        if(!$res) {
+            throw new Exception("The record does not exist");
+        }
+        $data = [
+            "listorder" => $listorder,
+        ];
+
+        try {
+            $res = $this->model->updayeByID($id, $data);
+        }catch (\Exception $e) {
+            // logger
+            return false;
+        }
+        return $res;
+    }
+
+    /**
+     * Change category status
+     * @param $id
+     * @param $status
+     * @return bool
+     * @throws Exception
+     */
+    public function status($id,$status){
+        $res = $this->getById($id);
+        if (!$res){
+            throw new Exception('The record does not exist!');
+        }
+        if ($res['status']==$status){
+            throw new Exception('Same status before and after, no need to modify!');
+        }
+
+        $data = [
+            'status' =>intval($status),
+        ];
+        try {
+            $res = $this->model->updayeByID($id,$data);
+        }catch (\Exception $e){
+            return false;
+        }
+        return $res;
     }
 }

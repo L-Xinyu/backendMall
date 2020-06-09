@@ -5,6 +5,7 @@
  */
 
 namespace app\admin\controller;
+use app\common\lib\Status as StatusLib;
 use think\facade\View;
 use app\common\business\Category as CategoryBusiness;
 
@@ -54,6 +55,55 @@ class Category extends AdminBase
         } catch (\Exception $e) {
             return show(config('status.error'), $e->getMessage());
         }
+        if ($result){
             return show(config("status.success"), "OK");
+        }
+        return show(config("status.error"), "Failed to add new category!");
     }
+
+    //Sort categories
+    public function listorder(){
+        $id = input('param.id',0,'intval');
+        $listorder = input('param.listorder',0,'intval');
+
+        if (!$id){
+            return show(config('status.error'),'Parameter error');
+        }
+        try {
+            $res = (new CategoryBusiness())->listorder($id,$listorder);
+        }catch (\Exception $e){
+            return show(config('status.error'), $e->getMessage());
+        }
+        if ($res){
+            return show(config("status.success"), "Success sort");
+        }else{
+            return show(config('status.error'),'Failed sort');
+        }
+    }
+
+    //update status
+    public function status(){
+        $status = input('param.status',0,'intval');
+        $id = input('param.id',0,'intval');
+
+        if (!$id||!in_array($status,StatusLib::getTableStatus())){
+            return show(config('status.error'),'Parameter error');
+        }
+        try {
+            $res = (new CategoryBusiness())->status($id,$status);
+        }catch (\Exception $e){
+            return show(config('status.error'), $e->getMessage());
+        }
+        if ($res){
+            return show(config("status.success"), "Success update status~");
+        }else{
+            return show(config('status.error'),'Failed update status!');
+        }
+
+    }
+
+
+
+
+
 }

@@ -31,6 +31,10 @@ class Category extends Model
             ->order($order)
             ->paginate($num);
         return $result;
-
+    }
+    //根据ID 更新数据库中的数据
+    public function updayeByID($id,$data){
+        $data['update_time'] = time();
+        return $this->where(['id'=>$id])->save($data);
     }
 }

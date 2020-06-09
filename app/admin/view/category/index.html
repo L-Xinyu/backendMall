@@ -57,48 +57,49 @@
                 </thead>
                 <tbody>
                 <!--一级类目循环-->
+                {volist name="categories['data']" id="vo"}
                 <tr>
                     <td>
-                        1
+                        {$vo.id}
                     </td>
                     <td>
-                        Hello
+                        {$vo.name}
                     </td>
                     <td>
-                        1
+                        <div class="layui-input-inline">
+                            <input type="text" value="{$vo.listorder}" data-id="{$vo.id}" class="changeSort layui-input">
+                        </div>
                     </td>
                     <td>
-                        Create Time
+                        {$vo.create_time}
                     </td>
                     <td>
-                        Update Time
+                        {$vo.update_time}
                     </td>
                     <td>
-                        Operator:Xinyu
+                        {$vo.operate_user}
                     </td>
-
-                    <td data-id="1"><input type="checkbox" checked="" name="status" lay-skin="switch"
-                                           lay-filter="switchTest"
+                    <td data-id="{$vo.id}"><input type="checkbox" {if $vo.status == 1}checked{/if}  name="status" lay-skin="switch"
+                                           lay-filter="switchStatus"
                                            lay-text="ON|OFF">
                     </td>
                     <td>
-                        <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete del-child" data-ptype="1"
-                           lay-event="delete" data-id="$id">Delete</a>
-                        <a href="{:url('index',['pid'=>1])}">Get subsection</a>
+                        <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete delete" data-ptype="1"
+                           lay-event="delete" data-id="{$vo.id}">Delete</a>
+                        <a href="{:url('index',['pid'=>$vo.id])}">Get subsection</a>
                     </td>
                 </tr>
+                {/volist}
                 <!--一级类目循环 end-->
                 </tbody>
             </table>
         </div>
         <div id="pages"></div>
     </div>
-
 </div>
 <script src="{__STATIC_PATH}admin/lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
 <script src="{__STATIC_PATH}admin/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
 <script src="{__STATIC_PATH}admin/js/common.js?v5" charset="utf-8"></script>
-<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 <script>
     layui.use(['form', 'laypage'], function () {
         var form = layui.form
@@ -106,20 +107,30 @@
 
         laypage.render({ //分页
             elem: 'pages'
-            , count: 100
+            , count: {$categories.total}
             , theme: '#FFB800'
+            , limit: {$categories.per_page}
+            , curr: {$categories.current_page}
+            , jump:function (obj,first) {
+                if(!first){
+                    location.href="?page="+obj.curr
+                }
+            }
+
         });
 
         //监听状态 更改
-        form.on('switch(switchTest)', function (obj) {
-            console.log(obj.elem.checked, '改变状态')
-
+        form.on('switch(switchStatus)', function (obj) {
             let id = obj.othis.parent().attr('data-id');
             let status = obj.elem.checked ? 1 : 0;
             $.ajax({
-                url: '{:url("admin/change")}?id=' + id + '&status=' + status,
+                url: '{:url("category/status")}?id=' + id + '&status=' + status,
                 success: (res) => {
-
+                    if (res.status == 1){
+                        window.location.reload();
+                    }else {
+                        layer.msg('Failed to change status');
+                    }
                 }
             });
             return false;
@@ -150,20 +161,18 @@
             })
         }
 
-        // 删除二级分类
-        $('.del-child').on('click', function () {
+        // Delete category
+        $('.delete').on('click', function () {
             let ptype = $(this).attr('data-ptype'); // fu
             let id = $(this).attr('data-id'); // fu
-            let msg = '';
-            if (ptype == 1) { // 等级类目
-                msg = '一';
-            } else if (ptype == 2) {
-                msg = '二';
-            }
-            layObj.box(`是否删除${msg}级分类`, () => {
-                let   url = '{:url("admin/del")}?id=' + id
+            layObj.box(`Whether to delete the current category?`, () => {
+                let url = '{:url("category/status")}?id=' + id + "&status=99"
                 layObj.get(url,  (res) =>{
-                    $(this).parent().remove()
+                    if (res.status == 1){
+                        window.location.reload();
+                    }else {
+                        layer.msg('Failed to delete category!');
+                    }
                 })
 
             })
@@ -176,9 +185,13 @@
             if(!val){
                 return;
             }
-            let url = '{:url("admin/sort")}?id=' + id + '&sort='+val;
+            let url = '{:url("category/listorder")}?id=' + id + '&listorder='+val;
             layObj.get(url,function (res) {
-                console.log(res, 'sort');
+                if (res.status == 1){
+                    window.location.reload();
+                }else {
+                    layer.msg('Failed to sort list!');
+                }
             })
 
         })
