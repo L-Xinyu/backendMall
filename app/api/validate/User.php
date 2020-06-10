@@ -14,6 +14,7 @@ class User extends Validate
         'phone_number' => 'require',
         'code' => 'require|number|min:4',
         'type' => ['require','in'=>'1,2'],
+        'sex' => ["require", "in"=>"0,1,2"],
     ];
     protected $message = [
         'username' => 'Must have username',
@@ -23,10 +24,13 @@ class User extends Validate
         'code.min'  =>  'Verification code length must be greater than 4',
         'type.require' => 'Need type',
         'type.in' => 'Wrong type value',
+        'sex.require' => 'Must have sex',
+        'sex.in' => 'Wrong sex value'
     ];
 
     protected $scene = [
         'send_code' => ['phone_number'],
         'login' => ['phone_number', 'code', 'type'],
+        'update_user' => ['username', 'sex'],
     ];
 }

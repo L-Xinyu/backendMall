@@ -21,4 +21,37 @@ class User extends Model
         $result = $this->where($where)->find();
         return $result;
     }
+    //Get user data by userid
+    public function getUserById($id){
+        $id = intval($id);
+        if (!$id){
+            return false;
+        }
+        return $this->find($id);
+    }
+
+    //Get userInfo by username
+    public function getUserByUsername($username){
+        if (empty($username)){
+            return false;
+        }
+        $where = [
+            'username' => $username,
+        ];
+        $result = $this->where($where)->find();
+        return $result;
+    }
+
+    public function updateById($id, $data) {
+        $id = intval($id);
+        if(empty($id) || empty($data) || !is_array($data)) {
+            return false;
+        }
+
+        $where = [
+            "id" => $id,
+        ];
+
+        return $this->where($where)->save($data);
+    }
 }
