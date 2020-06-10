@@ -5,9 +5,10 @@
  */
 
 namespace app\common\business;
+use app\common\lib\Time;
 use app\common\model\mysql\User as UserModel;
 use think\Exception;
-
+use app\common\lib\Token;
 class User
 {
     public $userObj = null;
@@ -37,7 +38,17 @@ class User
             }catch (\Exception $e){
                 throw new Exception('Database server Error!');
             }
+        }else{
+            $userId = $user->id;
+            $username = $user->username;
         }
-        return true;
+        $token = Token::getLoginToken($data['phone_number']);
+        $redisData = [
+            'id' => $userId,
+            'username' => $username,
+        ];
+        $res = cache(config('redis.token_pre').$token,$redisData,Time::userLoginExpiresTime([$data['type']]));
+        //返回给前端数据记录session
+        return $res ? ['token'=>$token,'username'=>$username] : false;
     }
 }

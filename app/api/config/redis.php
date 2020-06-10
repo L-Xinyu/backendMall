@@ -5,5 +5,6 @@
  */
 return [
     'code_pre' => 'mall_code_pre_',
-    'code_expire' => 1800,
+    'code_expire' => 3600,
+    'token_pre' => 'mall_token_pre',
 ];
