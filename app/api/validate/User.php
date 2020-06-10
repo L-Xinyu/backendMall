@@ -12,13 +12,21 @@ class User extends Validate
     protected $rule = [
         'username' => 'require',
         'phone_number' => 'require',
+        'code' => 'require|number|min:4',
+        'type' => ['require','in'=>'1,2'],
     ];
     protected $message = [
         'username' => 'Must have username',
         'phone_number' => 'Must have phone number',
+        'code.require' => 'Need message code',
+        'code.number'  =>  'MessageCode must be number',
+        'code.min'  =>  'Verification code length must be greater than 4',
+        'type.require' => 'Need type',
+        'type.in' => 'Wrong type value',
     ];
 
     protected $scene = [
         'send_code' => ['phone_number'],
+        'login' => ['phone_number', 'code', 'type'],
     ];
 }
