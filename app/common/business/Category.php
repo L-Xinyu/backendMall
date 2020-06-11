@@ -37,6 +37,17 @@ class Category
         $categories = $categories->toArray();
         return $categories;
     }
+
+    public function getALLCategories(){
+        $field = 'id as category_id, name, pid';
+        $categories = $this->model->getNormalCategories($field);
+        if (!$categories){
+            return $categories;
+        }
+        $categories = $categories->toArray();
+        return $categories;
+    }
+
     //Paginated list
     public function getList($data,$num){
         $list = $this->model->getLists($data,$num);
