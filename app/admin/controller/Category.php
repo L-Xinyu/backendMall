@@ -102,4 +102,20 @@ class Category extends AdminBase
         }
 
     }
+
+    //获取一级分类数据
+    public function dialog(){
+        $categories = (new CategoryBusiness())->getNormalByPid();
+        return view("",[
+            'categories' => json_encode($categories),
+        ]);
+    }
+    //二级分类数据
+    public function getByPid(){
+        $pid = input('param.pid',0,'intval');
+        $categories = (new CategoryBusiness())->getNormalByPid($pid);
+        return show(config('status.success'),'OK~~~',$categories);
+    }
+
+
 }

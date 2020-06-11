@@ -139,4 +139,20 @@ class Category
         }
         return $res;
     }
+
+    /**
+     * Get first category content
+     * @param int $pid
+     * @param string $field
+     * @return array
+     */
+    public function getNormalByPid($pid = 0, $field = "id, name, pid"){
+        try {
+            $res = $this->model->getNormalByPid($pid,$field);
+        }catch (\Exception $e){
+            return [];
+        }
+        $res = $res->toArray();
+        return $res;
+    }
 }
