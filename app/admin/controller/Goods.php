@@ -10,6 +10,17 @@ class Goods extends AdminBase
 {
     public function index(){
         $data = [];
+        //goods search
+        $title = input("param.title", "", "trim");
+        $time = input("param.time", "", "trim");
+
+        if(!empty($title)) {
+            $data['title'] = $title;
+        }
+        if(!empty($time)) {
+            $data['create_time'] = explode(" - ", $time);
+        }
+
         $goods = (new GoodsBusiness())->getLists($data, 5);
         return view("", [
             "goods" => $goods,

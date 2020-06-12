@@ -70,8 +70,12 @@ class Goods extends BusinessBase
      * @return array
      */
     public function getLists($data, $num = 5) {
+        $likeKeys = [];
+        if(!empty($data)) {
+            $likeKeys = array_keys($data);
+        }
         try {
-            $list = $this->model->getLists($data, $num);
+            $list = $this->model->getLists($likeKeys, $data, $num);
             $result = $list->toArray();
         }catch (\Exception $e) {
             $result = Arr::getPaginateDefaultData($num);
