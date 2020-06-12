@@ -5,6 +5,7 @@
  */
 
 namespace app\admin\controller;
+use app\common\lib\Arr;
 use app\common\lib\Status as StatusLib;
 use think\facade\View;
 use app\common\business\Category as CategoryBusiness;
@@ -19,7 +20,7 @@ class Category extends AdminBase
         try {
             $categories = (new CategoryBusiness())->getList($data,5);
         }catch (\Exception $e){
-            $categories = [];
+            $categories = Arr::getPaginateDefaultData(5);
         }
         return View::fetch("",[
             'categories' => $categories,

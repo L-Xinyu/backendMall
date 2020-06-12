@@ -9,7 +9,11 @@ use app\common\business\Goods as GoodsBusiness;
 class Goods extends AdminBase
 {
     public function index(){
-        return view();
+        $data = [];
+        $goods = (new GoodsBusiness())->getLists($data, 5);
+        return view("", [
+            "goods" => $goods,
+        ]);
     }
 
     public function add(){

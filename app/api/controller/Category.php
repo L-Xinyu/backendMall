@@ -6,7 +6,7 @@
 
 namespace app\api\controller;
 use app\common\business\Category as CategoryBusiness;
-use app\common\lib\CatArr;
+use app\common\lib\Arr;
 
 class Category extends ApiBase
 {
@@ -22,8 +22,8 @@ class Category extends ApiBase
             return show(config('status.success'),'Data is empty!!!');
         }
 
-        $result = CatArr::getTree($categories);
-        $result = CatArr::sliceTreeArr($result);
+        $result = Arr::getTree($categories);
+        $result = Arr::sliceTreeArr($result);
         return show(config('status.success'),'OK!!!',$result);
     }
 }

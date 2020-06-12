@@ -105,7 +105,7 @@ class Category
         ];
 
         try {
-            $res = $this->model->updayeByID($id, $data);
+            $res = $this->model->updateByID($id, $data);
         }catch (\Exception $e) {
             // logger
             return false;
@@ -133,7 +133,7 @@ class Category
             'status' =>intval($status),
         ];
         try {
-            $res = $this->model->updayeByID($id,$data);
+            $res = $this->model->updateByID($id,$data);
         }catch (\Exception $e){
             return false;
         }

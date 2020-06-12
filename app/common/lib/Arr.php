@@ -6,7 +6,7 @@
 
 namespace app\common\lib;
 
-class CatArr
+class Arr
 {
     /**
      * Classification tree无限极分类
@@ -52,4 +52,19 @@ class CatArr
         return $data;
     }
 
+    /**
+     * goods分页默认返回数据
+     * @param $num
+     * @return array
+     */
+    public static function getPaginateDefaultData($num){
+        $result = [
+            'total' => 0,
+            'per_page' => $num,
+            'current_page' => 1,
+            'last_page' => 0,
+            'data' => [],
+        ];
+        return $result;
+    }
 }
