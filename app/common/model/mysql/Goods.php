@@ -5,9 +5,8 @@
  */
 
 namespace app\common\model\mysql;
-use think\Model;
 
-class Goods extends Model
+class Goods extends ModelBase
 {
 
 }

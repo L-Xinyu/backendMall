@@ -7,9 +7,8 @@
 namespace app\common\model\mysql;
 use think\Model;
 
-class Category extends Model
+class Category extends ModelBase
 {
-    protected $autoWriteTimestamp = true;
     //Get category information
     public function getNormalCategories($field = "*"){
         $where = [
@@ -38,12 +37,6 @@ class Category extends Model
             ->order($order)
             ->paginate($num);
         return $result;
-    }
-
-    //根据ID 更新数据库中的数据
-    public function updayeByID($id,$data){
-        $data['update_time'] = time();
-        return $this->where(['id'=>$id])->save($data);
     }
 
     //获取每个id下子分类数量get Subcategories counts
