@@ -4,10 +4,10 @@
  * @since 06/06/2020 16:18
  */
 
-namespace app\common\model;
+namespace app\common\model\mysql;
 use think\Model;
 
-class Product extends Model
+class Goods extends Model
 {
 
 }
