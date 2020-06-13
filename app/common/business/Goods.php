@@ -130,4 +130,31 @@ class Goods extends BusinessBase
         return $result->toArray();
     }
 
+    /**
+     * Goods pagination display
+     * @param $data
+     * @param int $num
+     * @param $order
+     * @return array
+     */
+    public function getNormalLists($data, $num = 5, $order) {
+        try {
+            $field = "sku_id as id, title, recommend_image as image,price";
+            $list = $this->model->getNormalLists($data, $num, $field, $order);
+            $res = $list->toArray();
+            //转换分页数据格式
+            $result = [
+                "total_page_num" => isset($res['last_page']) ? $res['last_page'] : 0,
+                "count" => isset($res['total']) ? $res['total'] : 0,
+                "page" => isset($res['current_page']) ? $res['current_page'] : 0,
+                "page_size" => $num,
+                "list" => isset($res['data']) ? $res['data'] : []
+            ];
+        }catch (\Exception $e) {
+            //echo $e->getMessage();exit;
+            $result = [];
+        }
+        return $result;
+    }
+
 }

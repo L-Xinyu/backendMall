@@ -52,10 +52,12 @@ class Goods extends ModelBase
             ->select();
         return $result;
     }
+
     //Image url
     public function getImageAttr($value){
         return request()->domain().$value;
     }
+
     //Home goods recommend
     public function getNormalGoodsFindInSetCategoryId($categoryId, $field = true, $limit = 5){
         $order = [
@@ -73,4 +75,18 @@ class Goods extends ModelBase
         return $result;
     }
 
+    //goods展示页栏目
+    public function getNormalLists($data, $num = 5, $field = true,$order) {
+        $res = $this;
+        if(isset($data['category_path_id'])) {
+            $res = $this->whereFindInSet("category_path_id", $data['category_path_id']);
+        }
+        $list = $res->where("status", "=", config("status.mysql.table_normal"))
+            ->order($order)
+            ->field($field)
+            ->paginate($num);
+
+        //echo $this->getLastSql();exit;
+        return $list;
+    }
 }
