@@ -83,7 +83,10 @@ class Goods extends BusinessBase
         return $result;
     }
 
-
+    /**
+     * 首页轮播图
+     * @return array
+     */
     public function getRotationChart(){
         $data = [
             'is_index_recommend' => 1,
@@ -91,6 +94,36 @@ class Goods extends BusinessBase
         $field = 'sku_id as id, title, big_image as image';
         try {
             $result = $this->model->getNormalGoodsByCondition($data,$field,5);
+        }catch (\Exception $e){
+            return [];
+        }
+        return $result->toArray();
+    }
+
+    /**
+     * 首页推荐Home Goods
+     * @param $categoryIds
+     * @return array
+     */
+    public function cagegoryGoodsRecommend($categoryIds){
+        if (!$categoryIds){
+            return [];
+        }
+        //栏目的获取？？？？
+        foreach ($categoryIds as $k => $categoryId){
+            $result[$k]['categorys'] = [];
+        }
+
+        foreach ($categoryIds as $key => $categoryId){
+            $result[$key]['goods'] = $this->getNormalGoodsFindInSetCategoryId($categoryId);
+        }
+        return $result;
+    }
+
+    public function getNormalGoodsFindInsetCategoryId($categoryId){
+        $field = 'sku_id as id, title, price, recommend_image as image';
+        try {
+            $result = $this->model->getNormalGoodsFindInSetCategoryId($categoryId, $field);
         }catch (\Exception $e){
             return [];
         }

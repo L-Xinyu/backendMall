@@ -52,8 +52,25 @@ class Goods extends ModelBase
             ->select();
         return $result;
     }
-
+    //Image url
     public function getImageAttr($value){
         return request()->domain().$value;
     }
+    //Home goods recommend
+    public function getNormalGoodsFindInSetCategoryId($categoryId, $field = true, $limit = 5){
+        $order = [
+            'listorder' => 'desc',
+            'id' => 'desc'
+        ];
+        //whereFindInSet获取某分类下的数据
+        $result = $this-> whereFindInSet('category_path_id',$categoryId)
+            ->where('status','=',config('status.success'))
+            ->order($order)
+            ->field($field)
+            ->limit($limit)
+            ->select();
+        //echo $this->getLastSql();exit;
+        return $result;
+    }
+
 }
