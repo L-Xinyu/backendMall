@@ -37,4 +37,23 @@ class Goods extends ModelBase
         //echo $this->getLastSql();exit;
         return $list;
     }
+
+    //获取大图
+    public function getNormalGoodsByCondition($where,$field = true,$limit = 5){
+        $order = [
+            'listorder' => 'desc',
+            'id' => 'desc'
+        ];
+        $where['status'] = config('status.success');
+        $result = $this->where($where)
+            ->order($order)
+            ->field($field)
+            ->limit($limit)
+            ->select();
+        return $result;
+    }
+
+    public function getImageAttr($value){
+        return request()->domain().$value;
+    }
 }

@@ -83,4 +83,18 @@ class Goods extends BusinessBase
         return $result;
     }
 
+
+    public function getRotationChart(){
+        $data = [
+            'is_index_recommend' => 1,
+        ];
+        $field = 'sku_id as id, title, big_image as image';
+        try {
+            $result = $this->model->getNormalGoodsByCondition($data,$field,5);
+        }catch (\Exception $e){
+            return [];
+        }
+        return $result->toArray();
+    }
+
 }
