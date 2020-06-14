@@ -10,6 +10,7 @@ use app\common\model\mysql\Goods as GoodsModel;
 use app\common\business\GoodsSku as GoodsSkuBusiness;
 use think\Exception;
 use app\common\business\SpecsValue as SpecsValueBusiness;
+use think\facade\Cache;
 
 class Goods extends BusinessBase
 {
@@ -169,24 +170,22 @@ class Goods extends BusinessBase
             return [];
         }
         $goods = $goodsSku['goods'];
-        $skus = $skuBisObj->getSkusByGoodsId($goods['id']);
-
-        if (!$skus){
-            return [];
-        }
-
-        $flagValue= '';
-        foreach ($skus as $s) {
-            if ($s['id'] == $skuId){
-                $flagValue = $s['specs_value_ids'];//sku下的属性值
-            }
-        }
-        $gids = array_column($skus,'id','specs_value_ids');
-
         //detail SKU
         if ($goods['goods_specs_type'] == 1){  //统一规格
             $sku = [];
-        }else{  //多规格
+        }else{  //多规格优化
+            $skus = $skuBisObj->getSkusByGoodsId($goods['id']);
+            if (!$skus){
+                return [];
+            }
+
+            $flagValue= '';
+            foreach ($skus as $s) {
+                if ($s['id'] == $skuId){
+                    $flagValue = $s['specs_value_ids'];//sku下的属性值
+                }
+            }
+            $gids = array_column($skus,'id','specs_value_ids');
             $sku = (new SpecsValueBusiness())->detailGoodsSkus($gids, $flagValue);
         }
 
@@ -208,6 +207,10 @@ class Goods extends BusinessBase
                     '$1'.request()->domain().'$2', $goods['description']),
             ],
         ];
+
+        //record goods redis
+        Cache::inc('mall_pv_'.$goods['id']);
+
         return $result;
     }
 }
