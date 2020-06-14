@@ -46,4 +46,18 @@ class GoodsSku extends BusinessBase
         }
         return true;
     }
+
+    public function getNormalSkuAndGoods($id){
+        //use goods func at GoodsModel
+        $result = $this->model->with('goods')->find($id);
+        //dump($result->toArray());
+        if (!$result){
+            $result = [];
+        }
+        $result = $result->toArray();
+        if ($result['status'] != config('status.mysql.table_normal')){
+            return [];
+        }
+        return $result;
+    }
 }

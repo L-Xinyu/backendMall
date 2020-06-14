@@ -9,5 +9,7 @@ use think\Model;
 
 class GoodsSku extends ModelBase
 {
-
+    public function goods(){
+        return $this->hasOne(Goods::class,'id','goods_id');
+    }
 }

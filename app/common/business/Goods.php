@@ -157,4 +157,9 @@ class Goods extends BusinessBase
         return $result;
     }
 
+    //goods details
+    public function getGoodsDetailBySkuId($skuId){
+        $goodsSku =  (new GoodsSkuBusiness())->getNormalSkuAndGoods($skuId);
+    }
+
 }
