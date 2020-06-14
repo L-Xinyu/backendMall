@@ -49,7 +49,11 @@ class GoodsSku extends BusinessBase
 
     public function getNormalSkuAndGoods($id){
         //use goods func at GoodsModel
-        $result = $this->model->with('goods')->find($id);
+        try {
+            $result = $this->model->with('goods')->find($id);
+        }catch (\Exception $e){
+            return [];
+        }
         //dump($result->toArray());
         if (!$result){
             $result = [];
@@ -59,5 +63,15 @@ class GoodsSku extends BusinessBase
             return [];
         }
         return $result;
+    }
+
+    //detail 数据组装
+    public function getSkusByGoodsId($goodsId = 0){
+        try {
+            $skus = $this->model->getNormalByGoodsId($goodsId);
+        }catch (\Exception $e){
+            return [];
+        }
+        return $skus->toArray();
     }
 }

@@ -9,6 +9,7 @@ use app\common\lib\Arr;
 use app\common\model\mysql\Goods as GoodsModel;
 use app\common\business\GoodsSku as GoodsSkuBusiness;
 use think\Exception;
+use app\common\business\SpecsValue as SpecsValueBusiness;
 
 class Goods extends BusinessBase
 {
@@ -159,7 +160,54 @@ class Goods extends BusinessBase
 
     //goods details
     public function getGoodsDetailBySkuId($skuId){
-        $goodsSku =  (new GoodsSkuBusiness())->getNormalSkuAndGoods($skuId);
-    }
+        $skuBisObj = new GoodsSkuBusiness();
+        $goodsSku =  $skuBisObj->getNormalSkuAndGoods($skuId);
+        if (!$goodsSku){
+            return [];
+        }
+        if (empty($goodsSku['goods'])){
+            return [];
+        }
+        $goods = $goodsSku['goods'];
+        $skus = $skuBisObj->getSkusByGoodsId($goods['id']);
 
+        if (!$skus){
+            return [];
+        }
+
+        $flagValue= '';
+        foreach ($skus as $s) {
+            if ($s['id'] == $skuId){
+                $flagValue = $s['specs_value_ids'];//sku下的属性值
+            }
+        }
+        $gids = array_column($skus,'id','specs_value_ids');
+
+        //detail SKU
+        if ($goods['goods_specs_type'] == 1){  //统一规格
+            $sku = [];
+        }else{  //多规格
+            $sku = (new SpecsValueBusiness())->detailGoodsSkus($gids, $flagValue);
+        }
+
+        $result = [
+            'title' => $goods['title'],
+            'price' => $goodsSku['price'],
+            'cost_price' => $goodsSku['cost_price'],
+            'sales_count' => 0,
+            'stock' => $goodsSku['stock'],
+            'gids' => $gids,
+            'image' => $goods['carousel_image'],
+            'sku' => $sku,
+            'detail' => [
+                'd1' => [
+                    'Goods Code' => $goodsSku['id'],
+                    'Added time' => $goods['create_time'],
+                ],
+                'd2' => preg_replace('/(<img.+?src=")(.*?)/',
+                    '$1'.request()->domain().'$2', $goods['description']),
+            ],
+        ];
+        return $result;
+    }
 }

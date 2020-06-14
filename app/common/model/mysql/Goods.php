@@ -57,6 +57,15 @@ class Goods extends ModelBase
     public function getImageAttr($value){
         return request()->domain().$value;
     }
+    public function getCarouselImageAttr($value){
+        if (!empty($value)){
+            $value = explode(',',$value);
+            $value = array_map(function ($v){
+                return request()->domain().$v;
+            }, $value);
+        }
+        return $value;
+    }
 
     //Home goods recommend
     public function getNormalGoodsFindInSetCategoryId($categoryId, $field = true, $limit = 5){
