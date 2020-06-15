@@ -8,9 +8,17 @@ namespace app\common\business;
 
 use app\common\lib\Key;
 use think\facade\Cache;
+use app\common\business\GoodsSku as GoodsSkuBusiness;
 
 class Cart extends BusinessBase
 {
+    /**
+     * 获取购物车信息并写入Redis
+     * @param $userId
+     * @param $id
+     * @param $num
+     * @return bool
+     */
     public function insertRedis($userId, $id, $num){
         //sku_id get goods data
         $goodsSku = (new GoodsSku())->getNormalSkuAndGoods($id);
@@ -37,5 +45,39 @@ class Cart extends BusinessBase
             return FALSE;
         }
         return $res;
+    }
+
+    /**
+     * get shoppingCart lists
+     * @param $userId
+     * @return array
+     */
+    public function lists($userId){
+        try {
+            $res = Cache::hGetAll(Key::userCart($userId));
+        }catch (\Exception $e){
+            return [];
+        }
+        if (!$res){ return [];}
+
+        $result = [];
+        $skuIds = array_keys($res);
+        //get data in table sku
+        $skus = (new GoodsSkuBusiness())->getNormalInIds($skuIds);
+        $skuIdPrice = array_column($skus,'price','id');
+        $skuIdSpecsValueIds = array_column($skus,'specs_value_ids','id');
+        //key:sku表中的主键id,value:规格属性组装数据
+        $specsValues = (new SpecsValue())->detailSpecsValue($skuIdSpecsValueIds);
+        //dump($res);exit;
+
+        foreach ($res as $k=>$v){
+            $v = json_decode($v,true);
+            $v['id'] = $k;
+            $v['image'] = preg_match("/http:\/\//",$v['image'])?$v['image']:request()->domain().$v['image'];
+            $v['price'] = $skuIdPrice[$k] ?? 0;
+            $v['sku'] = $specsValues[$k] ?? "暂无规格";
+            $result[] = $v;
+        }
+        return $result;
     }
 }

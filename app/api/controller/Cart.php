@@ -6,11 +6,11 @@
 
 namespace app\api\controller;
 use app\common\lib\Show;
-use think\facade\Cache;
 use app\common\business\Cart as CartBusiness;
 
 class Cart extends AuthBase
 {
+    //add to shoppingCart
     public function add(){
         if (!$this->request->isPost()){
             return Show::error();
@@ -25,5 +25,14 @@ class Cart extends AuthBase
             return Show::error();
         }
         return Show::success();
+    }
+
+    //Get shoppingCart lists
+    public function lists(){
+        $res = (new CartBusiness())->lists($this->userId);
+        if ($res === FALSE){
+            return Show::error();
+        }
+        return Show::success($res);
     }
 }

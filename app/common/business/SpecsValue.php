@@ -95,4 +95,28 @@ class SpecsValue extends BusinessBase
         }
         return $res;
     }
+
+    //get shoppingCart lists
+    public function detailSpecsValue($skuIdSpecsValueIds){
+        $ids = array_values($skuIdSpecsValueIds);
+        $ids = implode(',',$ids); //数组元素组合成字符串
+        $ids = array_unique(explode(',',$ids));
+
+        $result = $this->getNormalInIds($ids);
+        if (!$result){
+            return [];
+        }
+
+        $res = [];
+        foreach ($skuIdSpecsValueIds as $skuId => $specs){
+            $specs = explode(',',$specs);
+            //处理sku description
+            $skuStr = [];
+            foreach ($specs as $spec) {
+                $skuStr[] = $result[$spec]['specs_name'].":".$result[$spec]['name'];
+            }
+            $res[$skuId] = implode('  ',$skuStr);
+        }
+        return $res;
+    }
 }

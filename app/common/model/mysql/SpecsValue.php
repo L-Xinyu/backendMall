@@ -7,7 +7,7 @@
 namespace app\common\model\mysql;
 use think\Model;
 
-class SpecsValue extends Model
+class SpecsValue extends ModelBase
 {
     protected $autoWriteTimestamp = true;
 
@@ -23,9 +23,4 @@ class SpecsValue extends Model
         return $res;
     }
 
-    public function getNormalInIds($ids){
-        return $this->whereIn('id',$ids)
-            ->where('status','=',config('status.mysql.table_normal'))
-            ->select();
-    }
 }

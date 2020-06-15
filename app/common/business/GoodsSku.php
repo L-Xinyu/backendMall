@@ -74,4 +74,14 @@ class GoodsSku extends BusinessBase
         }
         return $skus->toArray();
     }
+
+    public function getNormalInIds($ids){
+        try {
+            $result = $this->model->getNormalInIds($ids);
+        }catch(\Exception $e){
+            //Log
+            return [];
+        }
+        return $result->toArray();
+    }
 }
