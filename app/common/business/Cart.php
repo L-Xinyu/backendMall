@@ -10,7 +10,7 @@ use app\common\lib\Key;
 use think\Exception;
 use think\facade\Cache;
 use app\common\business\GoodsSku as GoodsSkuBusiness;
-
+use app\common\lib\Arr;
 class Cart extends BusinessBase
 {
     /**
@@ -79,6 +79,12 @@ class Cart extends BusinessBase
             $v['sku'] = $specsValues[$k] ?? "暂无规格";
             $result[] = $v;
         }
+        //解决购物车中redis hash无序的问题
+        if(!empty($result)){
+            $result = Arr::arrsSortByKey($result,'create_time');
+//            $resultSort = array_column($result,'create_time');
+//            array_multisort($resultSort, SORT_DESC, $result);
+        }
         return $result;
     }
 
@@ -123,5 +129,19 @@ class Cart extends BusinessBase
             return FALSE;
         }
         return $res;
+    }
+
+    /**
+     * Get the number of goods in the shopping cart
+     * @param $userId
+     * @return int
+     */
+    public function getCount($userId){
+        try {
+            $count = Cache::hLen(Key::userCart($userId));
+        }catch (\Exception $e){
+            return 0;
+        }
+        return intval($count);
     }
 }
