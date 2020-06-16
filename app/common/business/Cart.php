@@ -7,6 +7,7 @@
 namespace app\common\business;
 
 use app\common\lib\Key;
+use think\Exception;
 use think\facade\Cache;
 use app\common\business\GoodsSku as GoodsSkuBusiness;
 
@@ -79,5 +80,48 @@ class Cart extends BusinessBase
             $result[] = $v;
         }
         return $result;
+    }
+
+    /**
+     * Delete shoppingCart goods
+     * @param $userId
+     * @param $id
+     * @return bool
+     */
+    public function deleteRedis($userId, $id){
+        try {
+            $res = Cache::hDel(Key::userCart($userId), $id);
+        }catch (\Exception $e){
+            return FALSE;
+        }
+        return $res;
+    }
+
+    /**
+     * update goods num at cart
+     * @param $userId
+     * @param $id
+     * @param $num
+     * @return bool
+     * @throws Exception
+     */
+    public function updateRedis($userId,  $id, $num) {
+        try {
+            $get = Cache::hGet(Key::userCart($userId), $id);
+        }catch (\Exception $e) {
+            return FALSE;
+        }
+        if($get) {
+            $get = json_decode($get, true);
+            $get['num'] = $num;
+        } else {
+            throw new Exception('The product does not exist in the shopping cart!!!');
+        }
+        try {
+            $res = Cache::hSet(Key::userCart($userId), $id, json_encode($get));
+        }catch (\Exception $e) {
+            return FALSE;
+        }
+        return $res;
     }
 }

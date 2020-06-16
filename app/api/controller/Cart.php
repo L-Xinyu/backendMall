@@ -35,4 +35,44 @@ class Cart extends AuthBase
         }
         return Show::success($res);
     }
+
+    //delete goods at shoppingCart
+    public function delete(){
+        if (!$this->request->isPost()){
+            return Show::error();
+        }
+
+        $id = input('param.id',0,'intval');
+        if (!$id){
+            return Show::error([],'Parameter is invalid...');
+        }
+        $res = (new CartBusiness())->deleteRedis($this->userId,$id);
+        if ($res === FALSE){
+            return Show::error();
+        }
+        return Show::success($res);
+    }
+
+    //update cart goods
+    public function update() {
+        if(!$this->request->isPost()) {
+            return Show::error();
+        }
+
+        $id = input("param.id", 0, "intval");
+        $num = input("param.num", 0, "intval");
+        if(!$id || !$num) {
+            return Show::error('Parameter is invalid...');
+        }
+
+        try {
+            $res = (new CartBusiness())->updateRedis($this->userId, $id, $num);
+        }catch (\Exception $e) {
+            return Show::error($e->getMessage());
+        }
+        if($res === FALSE) {
+            return Show::error();
+        }
+        return Show::success($res);
+    }
 }
