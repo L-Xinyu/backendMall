@@ -51,11 +51,23 @@ class Cart extends BusinessBase
     /**
      * get shoppingCart lists
      * @param $userId
+     * @param $ids goods sku_id
      * @return array
      */
-    public function lists($userId){
+    public function lists($userId, $ids){
         try {
-            $res = Cache::hGetAll(Key::userCart($userId));
+            if ($ids){
+                $ids = explode(',',$ids);
+                //Get a specific piece of data
+                $res = Cache::hMget(Key::userCart($userId),$ids);
+                //Order:判断是否为非法不存在数据
+                if (in_array(false,array_values($res))){
+                    return [];
+                }
+            }else{
+                $res = Cache::hGetAll(Key::userCart($userId));
+            }
+
         }catch (\Exception $e){
             return [];
         }
@@ -65,6 +77,9 @@ class Cart extends BusinessBase
         $skuIds = array_keys($res);
         //get data in table sku
         $skus = (new GoodsSkuBusiness())->getNormalInIds($skuIds);
+        //stock
+        $stocks = array_column($skus,'stock','id');
+
         $skuIdPrice = array_column($skus,'price','id');
         $skuIdSpecsValueIds = array_column($skus,'specs_value_ids','id');
         //key:sku表中的主键id,value:规格属性组装数据
@@ -72,10 +87,17 @@ class Cart extends BusinessBase
         //dump($res);exit;
 
         foreach ($res as $k=>$v){
+            $price = $skuIdPrice[$k] ?? 0;
             $v = json_decode($v,true);
+            //库存判断 $k->goods sku_id
+            //当前库存数据$stocks[$k]<当前传递的good库存$v['num']
+            if ($ids && isset($stocks[$k]) && $stocks[$k] < $v['num']){
+                throw new Exception($v['title'].' Out of stock');
+            }
             $v['id'] = $k;
             $v['image'] = preg_match("/http:\/\//",$v['image'])?$v['image']:request()->domain().$v['image'];
-            $v['price'] = $skuIdPrice[$k] ?? 0;
+            $v['price'] = $price;
+            $v['total_price'] = $price * $v['num'];
             $v['sku'] = $specsValues[$k] ?? "暂无规格";
             $result[] = $v;
         }

@@ -18,7 +18,7 @@ class Cart extends AuthBase
         $id = input('param.id',0,'intval');
         $num = input('param.num',0,'intval');
         if (!$id || !$num){
-            return Show::error([],'参数不合法！');
+            return Show::error('Parameter is invalid...');
         }
         $res = (new CartBusiness())->insertRedis($this->userId,$id,$num);
         if ($res === FALSE){
@@ -29,7 +29,8 @@ class Cart extends AuthBase
 
     //Get shoppingCart lists
     public function lists(){
-        $res = (new CartBusiness())->lists($this->userId);
+        $ids = input('param.id','','trim');
+        $res = (new CartBusiness())->lists($this->userId,$ids);
         if ($res === FALSE){
             return Show::error();
         }
@@ -44,7 +45,7 @@ class Cart extends AuthBase
 
         $id = input('param.id',0,'intval');
         if (!$id){
-            return Show::error([],'Parameter is invalid...');
+            return Show::error('Parameter is invalid...');
         }
         $res = (new CartBusiness())->deleteRedis($this->userId,$id);
         if ($res === FALSE){
