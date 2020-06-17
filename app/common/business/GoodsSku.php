@@ -84,4 +84,11 @@ class GoodsSku extends BusinessBase
         }
         return $result->toArray();
     }
+
+    public function updateStock($data) {
+        foreach($data as $value) {
+            $this->model->incStock($value['id'], $value['num']);
+        }
+        return true;
+    }
 }

@@ -6,8 +6,9 @@
 
 namespace app\common\business;
 use app\common\model\mysql\Order as OrderModel;
+use app\common\model\mysql\OrderGoods as OrderGoodsModel;
 use Godruoyi\Snowflake\Snowflake;
-use app\common\business\Cart;
+use app\common\business\Cart as CartBusiness;
 class Order extends BusinessBase
 {
     public $model = NULL;
@@ -23,8 +24,43 @@ class Order extends BusinessBase
         $orderId = $snowflake->id();
 
         //get shoppingCart data =>redis
-        $cartObj = new Cart();
+        $cartObj = new CartBusiness();
         $result = $cartObj->lists($data['user_id'],$data['ids']);
-        dump($result);exit;
+        if (!$result){
+            return false;
+        }
+        $newResult = array_map(function ($v) use($orderId){
+            $v['sku_id'] = $v['id'];
+            unset($v['id']);
+            $v['order_id'] = $orderId;
+            return $v;
+        },$result);
+        //total price
+        $price = array_sum(array_column($result,'total_price'));
+        $orderData = [
+            'user_id' => $data['user_id'],
+            'order_id' => $orderId,
+            'total_price' => $price,
+            'address_id' => $data['address_id'],
+        ];
+        //事务处理
+        $this->model->startTrans();
+        try {
+            //add order
+            $id = $this->add($orderData);
+            if (!$id){
+                return 0;
+            }
+            //add order_goods
+            (new OrderGoodsModel())->saveAll($newResult);
+            //update goods_sku
+            $skuRes = (new GoodsSku())->updateStock($result);
+
+            $this->model->commit();
+            return true;
+        }catch (\Exception $e){
+            $this->model->rollback();
+            return false;
+        }
     }
 }

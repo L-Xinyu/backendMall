@@ -19,4 +19,10 @@ class GoodsSku extends ModelBase
         ];
         return $this->where($where)->select();
     }
+    //减库存
+    public function incStock($id,$num){
+        return $this->where('id','=',$id)
+            ->inc('stock',$num)
+            ->update();
+    }
 }
