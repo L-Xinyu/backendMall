@@ -116,9 +116,14 @@ class Cart extends BusinessBase
      * @param $id
      * @return bool
      */
-    public function deleteRedis($userId, $id){
+    public function deleteRedis($userId, $ids){
+        if (!is_array($ids)){
+            //如果$ids不是数组，转换为数组
+            $ids = explode(',',$ids); //id=1,2  => [1,2]
+        }
         try {
-            $res = Cache::hDel(Key::userCart($userId), $id);
+            //...$ids:php可变参数
+            $res = Cache::hDel(Key::userCart($userId), ...$ids);
         }catch (\Exception $e){
             return FALSE;
         }

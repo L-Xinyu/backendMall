@@ -52,12 +52,15 @@ class Order extends BusinessBase
                 return 0;
             }
             //add order_goods
-            (new OrderGoodsModel())->saveAll($newResult);
+            $orderGoodsResult = (new OrderGoodsModel())->saveAll($newResult);
             //update goods_sku
             $skuRes = (new GoodsSku())->updateStock($result);
+            //TODO Goods 更新
+            //delete goods in shoppingCart
+            $cartObj->deleteRedis($data['user_id'], $data['ids']);
 
             $this->model->commit();
-            return true;
+            return ['id' => $orderId];
         }catch (\Exception $e){
             $this->model->rollback();
             return false;
