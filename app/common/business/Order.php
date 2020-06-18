@@ -9,6 +9,8 @@ use app\common\model\mysql\Order as OrderModel;
 use app\common\model\mysql\OrderGoods as OrderGoodsModel;
 use Godruoyi\Snowflake\Snowflake;
 use app\common\business\Cart as CartBusiness;
+use app\common\business\OrderGoods as OrderGoodsBusiness;
+
 class Order extends BusinessBase
 {
     public $model = NULL;
@@ -65,5 +67,33 @@ class Order extends BusinessBase
             $this->model->rollback();
             return false;
         }
+    }
+
+    //get order detail
+    public function detail($data){
+        $condition = [
+            'user_id' => $data['user_id'],
+            'order_id' => $data['order_id']
+        ];
+        try {
+            $orders = $this->model->getByCondition($condition);
+        }catch (\Exception $e){
+            $orders = [];
+        }
+        if (!$orders){
+            return [];
+        }
+        $orders = $orders->toArray();
+        $orders = !empty($orders) ? $orders[0] : [];
+        if (empty($orders)){
+            return [];
+        }
+        //dump($orders);exit;
+        $orders['id'] = $orders['order_id'];  //order_id => id
+        $orders['consignee_info'] = 'Madrid';
+        //根据order_id查询 order_goods表信息数据
+        $orderGoods = (new OrderGoodsBusiness())->getByOrderId($data['order_id']);
+        $orders['malls'] = $orderGoods;
+        return $orders;
     }
 }
