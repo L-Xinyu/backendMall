@@ -200,8 +200,8 @@ class Goods extends BusinessBase
             'sku' => $sku,
             'detail' => [
                 'd1' => [
-                    'Goods Code' => $goodsSku['id'],
-                    'Added time' => $goods['create_time'],
+                    'Goods_Code' => $goodsSku['id'],
+                    'Added_time' => $goods['create_time'],
                 ],
                 'd2' => preg_replace('/(<img.+?src=")(.*?)/',
                     '$1'.request()->domain().'$2', $goods['description']),

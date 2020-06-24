@@ -9,5 +9,6 @@ namespace app\common\model\mysql;
 
 class Order extends ModelBase
 {
-
+    protected $hidden = ['id','logistics','update_time', 'end_time','close_time',
+        'consignment_time','pay_time','status','logistics_order'];
 }

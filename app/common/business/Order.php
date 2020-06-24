@@ -96,4 +96,29 @@ class Order extends BusinessBase
         $orders['malls'] = $orderGoods;
         return $orders;
     }
+
+    //get user all orders information
+    public function getAllOrders($data){
+        $condition = [
+            'user_id' => $data['user_id'],
+        ];
+        try {
+            $orders = $this->model->getByCondition($condition);
+        }catch (\Exception $e){
+            $orders = [];
+        }
+        if (!$orders){
+            return [];
+        }
+        $orders = $orders->toArray();
+        if (empty($orders)){
+            return [];
+        }
+//        $allOrders['page'] = 1;
+//        $allOrders['page_size'] = 10;
+//        $allOrders['total_page_num'] = 1;
+        $allOrders['list'] = $orders;
+
+        return $allOrders;
+    }
 }
