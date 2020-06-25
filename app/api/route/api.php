@@ -13,5 +13,7 @@ Route::rule('subcategory/:id','category/sub');
 
 Route::rule('detail/:id',"mall.detail/index");
 
-Route::rule('order/allOrders','order.lists/getAllOrders');
+Route::rule('order/all','order.lists/getAllOrders');
 Route::resource('order','order.index');
+
+Route::post('api/address','api/Address/addAddress');

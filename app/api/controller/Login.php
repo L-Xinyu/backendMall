@@ -4,16 +4,15 @@
  * @since 10/06/2020 14:38
  */
 
-declare(strict_types = 1);
 namespace app\api\controller;
 use app\api\validate\User;
 use app\BaseController;
 
 class Login extends BaseController
 {
-    public function index() :object{
+    public function index(){
         if (!$this->request->isPost()){
-            return show(config('status.erreo'),'Illegal request...');
+            return show(config('status.error'),'Illegal request...');
         }
         $phoneNumber = $this->request->param('phone_number','','trim');
         $code = input('param.code','0','intval');
