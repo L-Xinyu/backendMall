@@ -16,4 +16,5 @@ Route::rule('detail/:id',"mall.detail/index");
 Route::rule('order/all','order.lists/getAllOrders');
 Route::resource('order','order.index');
 
-Route::post('api/address','api/Address/addAddress');
+Route::post('api/address','api/Address/add');
+Route::get('api/address','api/Address/read');

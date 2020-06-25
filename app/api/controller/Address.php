@@ -10,7 +10,7 @@ use app\common\business\UserAddress as UserAddressBusiness;
 
 class Address extends AuthBase
 {
-    public function addAddress(){
+    public function add(){
         if (!$this->request->isPost()){
             return Show::error();
         }
@@ -34,6 +34,18 @@ class Address extends AuthBase
         }
         if (!$result){
             return Show::error('Failed to add new address...');
+        }
+        return Show::success($result);
+    }
+
+    public function read(){
+        $condition = [
+            'user_id' => $this->userId,
+        ];
+        $result = (new UserAddressBusiness())->getAddress($condition);
+
+        if (!$result){
+            return Show::error('Error getting user address information!');
         }
         return Show::success($result);
     }

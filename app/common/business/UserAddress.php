@@ -14,6 +14,7 @@ class UserAddress extends BusinessBase
     public function __construct(){
         $this->model = new UserAddressModel();
     }
+
     public function addAddress($data){
         try {
             $result = $this->model->save($data);
@@ -21,5 +22,25 @@ class UserAddress extends BusinessBase
             throw new Exception('Failed to insert data!');
         }
         return $result;
+    }
+
+    public function getAddress($data){
+        $condition = [
+            'user_id' => $data['user_id']
+        ];
+        try {
+            $userAddress = $this->model->getAddressByUserID($condition);
+        }catch (\Exception $e){
+            $userAddress = [];
+        }
+        if (!$userAddress){
+            return [];
+        }
+        //dump($userAddress);exit;
+        $address = $userAddress->toArray();
+        if (empty($address)){
+            return [];
+        }
+        return $address;
     }
 }
