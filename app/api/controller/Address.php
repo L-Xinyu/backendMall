@@ -15,13 +15,17 @@ class Address extends AuthBase
             return Show::error();
         }
 
+        $name = input('param.name','','trim');
+        $phone_number = input('param.phone_number','','trim');
         $consigneeInfo = input('param.consignee_info','','trim');
         $isDefault = input('param.is_default','','intval');
-        if (!$consigneeInfo){
+        if (!$name || !$consigneeInfo){
             return Show::error('Parameter is invalid...');
         }
 
         $data = [
+            'name' =>$name,
+            'phone_number' => $phone_number,
             'consignee_info' => $consigneeInfo,
             'is_default' => $isDefault,
             'user_id' => $this->userId,
