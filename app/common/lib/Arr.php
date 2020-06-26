@@ -76,4 +76,43 @@ class Arr
         array_multisort($resultSort, $sort, $result);
         return $result;
     }
+
+    /**
+     * 二三级分类获取
+     * @param $name
+     * @param $pathArr
+     * @param $data
+     * @return array
+     */
+    public static function searchTree($name,$pathArr,$data)
+    {
+        $category = $threeCategory = [];
+        $series = count($pathArr);
+        foreach($data as $key=>$val)
+        {
+            //Delete unused data
+            unset($val['path']);
+            $category[$val['series']][] = $val;
+            //three category data
+            if($val['series'] == 3 && $series >= 2){
+                $threeCategory[$val['pid']][] = $val;
+            }
+        }
+        //second category ID
+        $secondId = $pathArr[1] ?? ($category[2][0]['id'] ?? '');
+
+        $result = [
+            "name" => $name,
+            "focus_ids" => [
+                (int)($pathArr[1] ?? ''),
+                (int)($pathArr[2] ?? '')
+            ],
+            "list" => [
+                $category[2] ?? [],
+                $threeCategory[$secondId] ?? []
+            ]
+        ];
+        //dump($result);exit;
+        return $result;
+    }
 }

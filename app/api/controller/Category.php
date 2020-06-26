@@ -7,6 +7,7 @@
 namespace app\api\controller;
 use app\common\business\Category as CategoryBusiness;
 use app\common\lib\Arr;
+use app\common\lib\Show;
 
 class Category extends ApiBase
 {
@@ -25,5 +26,17 @@ class Category extends ApiBase
         $result = Arr::getTree($categories);
         $result = Arr::sliceTreeArr($result);
         return show(config('status.success'),'OK!!!',$result);
+    }
+
+    //Get second and third level subcategories
+    public function search()
+    {
+        $id = input('id','','intval');
+        if(!$id) {
+            return Show::error("Not exist Id");
+        }
+        $res = (new CategoryBusiness())->getCategorysApi($id);
+
+        return Show::success($res);
     }
 }
