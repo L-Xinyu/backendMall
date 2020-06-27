@@ -5,6 +5,7 @@
  */
 
 namespace app\common\business;
+use app\common\lib\Arr;
 use app\common\model\mysql\Category as CategoryModel;
 use think\Exception;
 
@@ -154,5 +155,33 @@ class Category
         }
         $res = $res->toArray();
         return $res;
+    }
+
+    /**
+     * Get category list information
+     * @param $id
+     * @return array
+     */
+    public function getCategorysApi($id)
+    {
+        //Current classification information
+        $info = $this->getById($id);
+        if(!$info){
+            return [];
+        }
+        //找到该分类对应的一级分类
+        $pathArr = explode(',',$info['path']);
+        $firstCategoryId = $pathArr[0];
+        //根据一级分类查找所有的分类数据
+        try{
+            $result = $this->model->getCategoryFindInSet($firstCategoryId,'id,pid,name,path,path as series');
+        }catch(\Exception $e){
+            trace('api-search-getCategoryFindInSet-'.$e->getMessage(),'error');//LOG
+            return [];
+        }
+        $categorys = $result->toArray();
+        $result = (Arr::searchTree($info['name'],$pathArr,$categorys));
+
+        return $result;
     }
 }

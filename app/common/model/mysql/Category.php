@@ -65,4 +65,39 @@ class Category extends ModelBase
             ->select();
         return $res;
     }
+
+    /**
+     * 几级分类获取器
+     * @param $value
+     * @return int
+     */
+    public function getSeriesAttr($value)
+    {
+        return count(explode(',',$value));
+    }
+
+
+    /**
+     * 根据一级分类ID查找该分类下的所有分类
+     * @param $id
+     * @param bool $field
+     * @return \think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getCategoryFindInSet($id,$field = true)
+    {
+        $order = [
+            'listorder'=>'desc',
+            'id'=>'desc'
+        ];
+        $res = $this->where('status',config('status.mysql.table_normal'))
+            ->field($field)
+            ->whereFindInSet('path',$id)
+            ->order($order)
+            ->select();
+
+        return $res;
+    }
 }
