@@ -6,6 +6,8 @@
 use think\facade\Route;
 
 Route::rule("smscode","sms/code","POST");
+
+Route::post('api/user/register','api/User/register');
 Route::resource('user','User');
 
 Route::rule('lists','mall.lists/index');

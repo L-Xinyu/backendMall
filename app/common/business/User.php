@@ -16,6 +16,32 @@ class User
         $this->userObj = new UserModel();
     }
 
+    //User register
+    public function regUser($data){
+        if (!is_array($data)){
+            throw new Exception('The data not array！');
+        }
+        $regUser = $this->userObj->getUserByPhoneNumber($data['phone_number']);
+        if (!empty($regUser)) {
+            throw new Exception('User already exists, please login!');
+        }
+
+        if (!$regUser){
+            $userData = [
+                'username' => $data['username'],
+                'phone_number' => $data['phone_number'],
+                'password' => $data['password'],
+                'status' => config('status.mysql.table_normal'),
+            ];
+            try {
+                $reg = $this->userObj->save($userData);
+            }catch (\Exception $e){
+                throw new Exception('Database server Error!');
+            }
+        }
+        return $reg;
+    }
+
     public function login($data){
         $redisCode = cache(config('redis.code_pre').$data['phone_number']);
         if (empty($redisCode) || $redisCode != $data['code']){
