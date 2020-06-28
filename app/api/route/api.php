@@ -7,8 +7,8 @@ use think\facade\Route;
 
 Route::post('api/auth/smscode','api/Auth/smsCode');
 Route::post('api/auth/login','api/Auth/login');
+Route::post('api/auth/register','api/Auth/register');
 
-Route::post('api/user/register','api/User/register');
 Route::post('api/user/logout','api/User/logout');
 Route::resource('user','User');
 
