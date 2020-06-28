@@ -20,7 +20,7 @@ class AdminBase extends BaseController
     }
 
     /**
-     * is Login??
+     * is Auth login??
      * @return bool
      */
     public function isLogin(){

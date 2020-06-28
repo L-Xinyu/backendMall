@@ -70,4 +70,15 @@ class User extends AuthBase
         }
         return show(1,'OK');
     }
+
+    //user logout
+    public function logout(){
+        //delete redis cache
+        $res = cache(config('redis.token_pre').$this->accessToken,NULL);
+
+        if ($res){
+            return show(config('status.success'),'Success Logout!');
+        }
+        return show('status.error','Failed Logout!');
+    }
 }
