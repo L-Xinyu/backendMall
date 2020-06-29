@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>用户管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="{__STATIC_PATH}admin/lib/layui-v2.5.4/css/layui.css" media="all">
+    <link rel="stylesheet" href="{__STATIC_PATH}admin/css/public.css" media="all">
+    <style>
+        .inoutCls {
+            height: 22px;
+            line-height: 22px;
+            padding: 0 5px;
+            font-size: 12px;
+            background-color: #1E9FFF;
+            max-width: 80px;
+            border: none;
+            color: #fff;
+            margin-left: 10px;
+            display: inline-block;
+            white-space: nowrap;
+            text-align: center;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <div class="layui-form" style="margin-top: 20px;">
+            <table class="layui-table">
+                <colgroup>
+                    <col width="40">
+                    <col width="60">
+                    <col width="40">
+                    <col width="130">
+                    <col width="130">
+                    <col width="130">
+                    <col width="125">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Sex</th>
+                    <th class="text-center">Phone</th>
+                    <th class="text-center">Create Time</th>
+                    <th class="text-center">Update Time</th>
+                    <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="user" id="vo"}
+                <tr>
+                    <td>
+                        {$vo.id}
+                    </td>
+                    <td>
+                        {$vo.username}
+                    </td>
+                    <td>
+                        {$vo.sex}
+                    </td>
+                    <td>
+                        {$vo.phone_number}
+                    </td>
+                    <td>
+                        {$vo.create_time}
+                    </td>
+                    <td>
+                        {$vo.update_time}
+                    </td>
+                    <td>
+                        <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete delete"
+                           data-ptype="1" lay-event="delete">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+        <div id="pages"></div>
+    </div>
+</div>
+<script src="{__STATIC_PATH}admin/lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+<script src="{__STATIC_PATH}admin/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
+<script src="{__STATIC_PATH}admin/js/common.js?v5" charset="utf-8"></script>
+<script>
+    layui.use(['form', 'table','laypage'], function () {
+        var form = layui.form
+            , laypage = layui.laypage;
+
+    })
+</script>
+</body>
+</html>

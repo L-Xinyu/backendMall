@@ -54,4 +54,17 @@ class User extends Model
 
         return $this->where($where)->save($data);
     }
+
+    public function getAllUsers(){
+        $where = [
+            'status' => config('status.mysql.table_normal'),
+        ];
+        $order = [
+            'id' => 'asc'
+        ];
+        $result = $this->where($where)
+            ->order($order)
+            ->select();
+        return $result;
+    }
 }

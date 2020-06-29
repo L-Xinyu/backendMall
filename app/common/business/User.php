@@ -107,4 +107,13 @@ class User
         }
         return $this->userObj->updateById($id,$data);
     }
+
+    public function getAllUsers(){
+        $user = $this->userObj->getAllUsers();
+        if (!$user){
+            return [];
+        }
+        $allUser = $user->toArray();
+        return $allUser;
+    }
 }
