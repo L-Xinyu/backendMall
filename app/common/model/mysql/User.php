@@ -44,14 +44,11 @@ class User extends Model
 
     public function updateById($id, $data) {
         $id = intval($id);
+        $data['update_time'] = time();
         if(empty($id) || empty($data) || !is_array($data)) {
             return false;
         }
-
-        $where = [
-            "id" => $id,
-        ];
-
+        $where = ["id" => $id];
         return $this->where($where)->save($data);
     }
 

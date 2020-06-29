@@ -76,7 +76,7 @@
                     </td>
                     <td>
                         <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete delete"
-                           data-ptype="1" lay-event="delete">
+                           data-ptype="1" lay-event="delete" data-id="{$vo.id}">
                             Delete
                         </a>
                     </td>
@@ -96,6 +96,22 @@
         var form = layui.form
             , laypage = layui.laypage;
 
+        // Delete a user
+        $('.delete').on('click', function () {
+            let ptype = $(this).attr('data-ptype');
+            let id = $(this).attr('data-id');
+            layObj.box(`Whether to delete the current User?`, () => {
+                let url = '{:url("user/userStatus")}?id=' + id + "&status=99"
+                layObj.get(url,  (res) =>{
+                    if (res.status === 1){
+                        window.location.reload();
+                    }else {
+                        layer.msg('Failed to delete this user!');
+                    }
+                })
+
+            })
+        })
     })
 </script>
 </body>

@@ -116,4 +116,27 @@ class User
         $allUser = $user->toArray();
         return $allUser;
     }
+
+    /**
+     * Delete user->Update user status 99
+     * @param $id
+     * @param $status
+     * @return bool
+     * @throws Exception
+     */
+    public function userStatus($id,$status){
+        $res = $this->getNormalUserById($id);
+        if (!$res){
+            throw new Exception('The user does not exist!');
+        }
+        $data = [
+            'status' =>intval($status),
+        ];
+        try {
+            $res = $this->userObj->updateByID($id,$data);
+        }catch (\Exception $e){
+            return false;
+        }
+        return $res;
+    }
 }
