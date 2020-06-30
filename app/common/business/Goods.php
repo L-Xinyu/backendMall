@@ -209,8 +209,23 @@ class Goods extends BusinessBase
         ];
 
         //record goods redis
-        Cache::inc('mall_pv_'.$goods['id']);
+        Cache::inc(config('redis.goods_search_pre').$goods['id']);
 
         return $result;
+    }
+
+    /**
+     * Get new Goods Recommend
+     * @param $count
+     * @return array|\think\Collection
+     */
+    public function newGoodsRecommend($count){
+        try {
+            $field = "id, title, price, recommend_image as image";
+            $goods = $this->model->getNewGoods($count,$field);
+        }catch (\Exception $e){
+            $goods = [];
+        }
+        return $goods;
     }
 }

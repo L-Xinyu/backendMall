@@ -98,4 +98,13 @@ class Goods extends ModelBase
         //echo $this->getLastSql();exit;
         return $list;
     }
+
+    //Detail page show new Goods Recommend
+    public function getNewGoods($count,$field=true){
+        $goods = self::limit($count)
+            ->field($field)
+            ->order('create_time desc')
+            ->select();
+        return $goods;
+    }
 }
