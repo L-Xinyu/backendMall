@@ -12,12 +12,12 @@ Route::post('api/auth/register','api/Auth/register');
 Route::post('api/user/logout','api/User/logout');
 Route::resource('user','User');
 
-Route::rule('lists','mall.lists/index');
+Route::rule('mall/lists','mall.lists/index');
+Route::rule('mall/detail/:id',"mall.detail/index");
+Route::rule('mall/recommend',"mall.recommend/index");
+
 Route::rule('category/search/:id','category/search');
 Route::rule('subcategory/:id','category/sub');
-
-Route::rule('detail/:id',"mall.detail/index");
-Route::rule('recommend',"mall.recommend/index");
 
 Route::rule('order/all','order.lists/getAllOrders');
 Route::resource('order','order.index');

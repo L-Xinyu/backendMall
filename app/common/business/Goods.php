@@ -209,7 +209,7 @@ class Goods extends BusinessBase
         ];
 
         //record goods redis
-        Cache::inc(config('redis.goods_search_pre').$goods['id']);
+        Cache::inc(config('redis.clicksNumber_pre').$goods['id']);
 
         return $result;
     }

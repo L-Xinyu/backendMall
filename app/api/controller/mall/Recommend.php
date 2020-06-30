@@ -12,7 +12,7 @@ use app\common\lib\Show;
 class Recommend extends ApiBase
 {
     //Detail page show new Goods Recommend
-    public function index($count=4){
+    public function index($count=3){
         $newGoods = (new GoodsBusiness())->newGoodsRecommend($count);
         if (!$newGoods){
             return Show::error('Error displaying the latest product!');

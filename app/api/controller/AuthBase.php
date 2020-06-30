@@ -12,16 +12,10 @@ class AuthBase extends ApiBase
     public $userId = 0;
     public $username = '';
     public $accessToken = '';
-    public $isLogin = 0;
 
     public function initialize()
     {
         parent::initialize();
-
-        if ($this->isLogin == 1){
-            $this->userId = 20;
-            return true;
-        }
 
         $this->accessToken = $this->request->header('access-token');
         if (!$this->accessToken || !$this->isLogin()){

@@ -8,4 +8,5 @@ return [
     'code_expire' => 3600,
     'token_pre' => 'mall_token_pre',
     'cart_pre' => 'mall_cart_',
+    'clicksNumber_pre' => 'mall_pv_',
 ];
