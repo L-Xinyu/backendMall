@@ -184,4 +184,15 @@ class Category
 
         return $result;
     }
+
+    //栏目Get the recommended items on the homepage
+    public function getCategoryByCategoryIds($categoryIds){
+        $field = 'id as category_id,name,pid';
+        try {
+            $res = $this->model->getNormalCategoryInPidOrId($categoryIds,$field);
+        }catch (\Exception $e){
+            $res = [];
+        }
+        return $res;
+    }
 }

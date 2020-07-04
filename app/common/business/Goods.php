@@ -34,9 +34,9 @@ class Goods extends BusinessBase
             ];
             return true;
         }elseif($data['goods_specs_type'] == 2){ //多规格
-            $goodsSkuBisobj = new GoodsSkuBusiness();
+            $goodsSkuBisObj = new GoodsSkuBusiness();
             $data['goods_id'] = $goodsId;
-            $res = $goodsSkuBisobj->saveAll($data);
+            $res = $goodsSkuBisObj->saveAll($data);
             if (!empty($res)){
                 //sum stock
                 $stock = array_sum(array_column($res,'stock'));
@@ -71,7 +71,7 @@ class Goods extends BusinessBase
      * @param int $num
      * @return array
      */
-    public function getLists($data, $num = 5) {
+    public function getLists($data, $num = 20) {
         $likeKeys = [];
         if(!empty($data)) {
             $likeKeys = array_keys($data);
@@ -111,13 +111,13 @@ class Goods extends BusinessBase
         if (!$categoryIds){
             return [];
         }
-        //栏目的获取？？？？
-        foreach ($categoryIds as $k => $categoryId){
-            $result[$k]['categorys'] = [];
-        }
-
-        foreach ($categoryIds as $key => $categoryId){
-            $result[$key]['goods'] = $this->getNormalGoodsFindInSetCategoryId($categoryId);
+        //Get the recommended items on the homepage
+        $result = [];
+        $categoryList = (new Category())->getCategoryByCategoryIds($categoryIds);
+        $categoryList = Arr::getTree($categoryList);
+        foreach ($categoryList as $k => $category){
+            $result[$k]['categorys'] = $categoryList[$k];
+            $result[$k]['goods'] = $this->getNormalGoodsFindInsetCategoryId($category['category_id']);
         }
         return $result;
     }

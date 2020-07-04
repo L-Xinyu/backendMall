@@ -100,4 +100,28 @@ class Category extends ModelBase
 
         return $res;
     }
+
+    /**
+     * Get the recommended items on the homepage
+     * @param $categoryIds
+     * @param bool $field
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getNormalCategoryInPidOrId($categoryIds, $field = true){
+        $order = [
+            'listorder'=>'desc',
+            'id'=>'desc'
+        ];
+        $where[] = ['id|pid', 'in', $categoryIds];
+        $where[] = ['status', '=', config('status.mysql.table_normal')];
+        $res = $this->where($where)
+            ->field($field)
+            ->order($order)
+            ->select();
+
+        return $res->toArray();
+    }
 }

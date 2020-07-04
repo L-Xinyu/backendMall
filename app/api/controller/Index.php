@@ -17,10 +17,7 @@ class Index extends ApiBase
 
     //首页商品推荐
     public function cagegoryGoodsRecommend(){
-        $categoryIds = [
-            28,
-            29
-        ];
+        $categoryIds = [1,2,3,4,5,6,7];
         $result = (new GoodsBusiness())->cagegoryGoodsRecommend($categoryIds);
         return Show::success($result);
     }
