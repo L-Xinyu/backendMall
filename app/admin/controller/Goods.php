@@ -21,7 +21,7 @@ class Goods extends AdminBase
             $data['create_time'] = explode(" - ", $time);
         }
 
-        $goods = (new GoodsBusiness())->getLists($data, 5);
+        $goods = (new GoodsBusiness())->getLists($data, 20);
         return view("", [
             "goods" => $goods,
         ]);

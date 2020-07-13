@@ -23,7 +23,7 @@ class Goods extends ModelBase
     }
 
     //获取后端列表数据
-    public function getLists($likeKeys, $data, $num = 10) {
+    public function getLists($likeKeys, $data, $num = 20) {
         $order = ["listorder" => "desc", "id" => "desc"];
         //if key not empty,search goods
         if (!empty($likeKeys)){
@@ -68,7 +68,7 @@ class Goods extends ModelBase
     }
 
     //Home goods recommend
-    public function getNormalGoodsFindInSetCategoryId($categoryId, $field = true, $limit = 5){
+    public function getNormalGoodsFindInSetCategoryId($categoryId, $field = true, $limit = 10){
         $order = [
             'listorder' => 'desc',
             'id' => 'desc'
@@ -85,7 +85,7 @@ class Goods extends ModelBase
     }
 
     //goods展示页栏目
-    public function getNormalLists($data, $num = 5, $field = true,$order) {
+    public function getNormalLists($data, $num = 10, $field = true,$order) {
         $res = $this;
         if(isset($data['category_path_id'])) {
             $res = $this->whereFindInSet("category_path_id", $data['category_path_id']);

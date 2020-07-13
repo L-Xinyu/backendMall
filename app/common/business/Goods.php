@@ -139,7 +139,7 @@ class Goods extends BusinessBase
      * @param $order
      * @return array
      */
-    public function getNormalLists($data, $num = 5, $order) {
+    public function getNormalLists($data, $num = 10, $order) {
         try {
             $field = "sku_id as id, title, recommend_image as image,price";
             $list = $this->model->getNormalLists($data, $num, $field, $order);

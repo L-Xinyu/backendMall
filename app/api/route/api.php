@@ -12,6 +12,7 @@ Route::post('api/auth/register','api/Auth/register');
 Route::post('api/user/logout','api/User/logout');
 Route::resource('user','User');
 
+Route::rule('mall/init',"mall.init/index");
 Route::rule('mall/lists','mall.lists/index');
 Route::rule('mall/detail/:id',"mall.detail/index");
 Route::rule('mall/recommend',"mall.recommend/index");
