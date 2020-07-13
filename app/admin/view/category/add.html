@@ -11,29 +11,29 @@
 </head>
 <body>
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-    <legend>商品分类管理</legend>
+    <legend>Category Management</legend>
 </fieldset>
 
 <form class="layui-form" action="">
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label" style="width: 200px;">父级分类</label>
+            <label class="layui-form-label" style="width: 200px;">Parent Category</label>
             <div class="layui-input-inline">
                 <select name="pid" id="classif"></select>
             </div>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label" style="width: 200px;">商品分类</label>
+        <label class="layui-form-label" style="width: 200px;">Category</label>
         <div class="layui-input-inline">
-            <input type="text" name="name" lay-verify="name" autocomplete="off" placeholder="请输入标分类名称"
+            <input type="text" name="name" lay-verify="name" autocomplete="off" placeholder="Enter category name"
                    class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label" style="width: 200px;"></label>
         <div class="layui-input-inline">
-            <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo1">立即提交</button>
+            <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo1">Submit</button>
         </div>
     </div>
 </form>
@@ -46,7 +46,7 @@
 
         function _classif(res=[]) {
             // res 分类数据 先期模拟
-            let temps = '<option value="0">-| 顶级菜单</option>';
+            let temps = '<option value="0">-| Top menu</option>';
             var data = {$categories|raw}
 
             let toTrees = toTree(data);

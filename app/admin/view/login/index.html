@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>后台管理-登陆</title>
+    <title>Gestión de back-end</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -27,14 +27,14 @@
         <form class="layui-form" action="">
             <div>
                 <i class="layui-icon layui-icon-username admin-icon"></i>
-                <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input admin-input admin-input-username" value="admin">
+                <input type="text" name="username" placeholder="Please enter username..." autocomplete="off" class="layui-input admin-input admin-input-username" value="admin">
             </div>
             <div>
                 <i class="layui-icon layui-icon-password admin-icon"></i>
-                <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input admin-input" value="">
+                <input type="password" name="password" placeholder="Please enter password..." autocomplete="off" class="layui-input admin-input" value="">
             </div>
             <div>
-                <input type="text" name="captcha" placeholder="请输入验证码" autocomplete="off" class="layui-input admin-input admin-input-verify input-val" value="">
+                <input type="text" name="captcha" placeholder="Please enter captcha..." autocomplete="off" class="layui-input admin-input admin-input-verify input-val" value="">
                 <!--<canvas id="canvas" class="admin-captcha" width="100" height="43"></canvas>-->
                 <div class="admin-captcha">{:captcha_img('','',95,40)}</div>
             </div>
